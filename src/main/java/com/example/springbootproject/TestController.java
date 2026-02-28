@@ -12,7 +12,7 @@ public class TestController {
 	
 	@RequestMapping("/test")
 	public String firstHandler() {
-		return "Hii world I can see you from here only........................";
+		return "Hii world I can see you from here only.......................";
 	}
 
 }
