@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -69,15 +70,19 @@ public class EmployeeController {
 	
 	//http://localhost:8080/employees/deleteEmployee/4 -delete
 	@DeleteMapping("/deleteEmployee/{id}")
-	public String delete(@PathVariable Long id) {
+	public String delete(@PathVariable("id") Long id) {
 		employeeService.deleteEmployee(id);
 		return "Deleted Successfully";
 	}
 
 	//http://localhost:8080/employees/getEmployee/4 -get
 	@GetMapping("/getEmployee/{id}")
-	public Employee getOne(@PathVariable Long id) {
-		return employeeService.getEmployeeById(id);
+	public ResponseEntity<EmployeeDTO> getOne(@PathVariable("id") Long id) {
+	EmployeeDTO employeeDTO=employeeService.getEmployeeById(id);
+	if(employeeDTO==null) {
+		return ResponseEntity.notFound().build();
+	}
+	return ResponseEntity.ok(employeeDTO);
 	}
 	//postman - http://localhost:8080/employees/getAllEmployees
 	//in spring boot without mapping it works based on class level mapping 
@@ -86,7 +91,7 @@ public class EmployeeController {
 		return employeeService.getAllEmployees();
 	}
 	@PutMapping(path = "/{id}")
-	public EmployeeDTO updateEmployeeID(@RequestBody EmployeeDTO employeeDTO,@PathVariable Long id) {
+	public EmployeeDTO updateEmployeeID(@RequestBody EmployeeDTO employeeDTO,@PathVariable("id") Long id) {
 		System.out.println(employeeDTO);
 		return employeeService.updateEmployeeID(id,employeeDTO);
 	}
@@ -97,7 +102,7 @@ public class EmployeeController {
 	// The request body contains a map of field names and values,
 	// which are applied dynamically using reflection in the service layer.
 	@PatchMapping(path = "/{id}")
-	public EmployeeDTO updatePartialEmployee(@RequestBody Map<String,Object> updatePartial,@PathVariable Long id) {
+	public EmployeeDTO updatePartialEmployee(@RequestBody Map<String,Object> updatePartial,@PathVariable("id") Long id) {
 		return employeeService.updatePartialEmployee(id,updatePartial);
 	}
 // Like this without method level mapping works directly 	
@@ -108,19 +113,19 @@ public class EmployeeController {
 //    }
 //
 //    @PutMapping("/{id}")
-//    public Employee update(@PathVariable Long id,
+//    public Employee update(@PathVariable("id") Long id,
 //                           @RequestBody Employee employee) {
 //        return employeeService.updateEmployee(id, employee);
 //    }
 //
 //    @DeleteMapping("/{id}")
-//    public String delete(@PathVariable Long id) {
+//    public String delete(@PathVariable("id") Long id) {
 //        employeeService.deleteEmployee(id);
 //        return "Deleted Successfully";
 //    }
 //
 //    @GetMapping("/{id}")
-//    public Employee getOne(@PathVariable Long id) {
+//    public Employee getOne(@PathVariable("id") Long id) {
 //        return employeeService.getEmployeeById(id);
 //    }
 //

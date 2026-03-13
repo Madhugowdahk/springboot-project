@@ -13,6 +13,7 @@ import com.example.springbootproject.repositories.EmployeeRepository;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -76,8 +77,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getEmployeeById(Long id) {
-        return employeeRepository.findById(id).orElse(null);
+    public EmployeeDTO getEmployeeById(Long id) {
+        Optional<Employee> savedEmployee= employeeRepository.findById(id);
+		return modelMapper.map(savedEmployee, EmployeeDTO.class);
+
     }
 
     @Override
